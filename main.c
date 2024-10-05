@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define DISPLAY_HEIGHT 30
-#define DISPLAY_WIDTH 40
+#define DISPLAY_HEIGHT 15
+#define DISPLAY_WIDTH 25
+#define FPS 10
 #define BOLD "\033[1m"
 #define RESET "\033[0m"
 
@@ -93,15 +94,15 @@ void DrawCells(Cells cells) {
     printf("\033[0K%2d ", i);
     for (int j = 0; j < DISPLAY_WIDTH; ++j) {
       if (cells[i][j] == 1)
-        printf(BOLD "\033[0K 0 " RESET);
+        printf(BOLD "\033[0K0" RESET);
       else
 #ifdef EMPTY_LINE_DOT
-        printf("\033[0K   ");
+        printf("\033[0K");
 #else
-        printf("\033[0K . ");
+        printf("\033[0K.");
 #endif
     }
-    printf("\033[0K \n");
+    printf("\033[0K\n");
   }
 }
 
@@ -119,12 +120,18 @@ int main() {
   seed[5][5] = 1;
   seed[4][4] = 1;
   seed[5][6] = 1;
+  seed[6][9] = 1;
+  seed[7][9] = 1;
+  seed[8][9] = 1;
+  seed[7][8] = 1;
+  seed[8][10] = 1;
 
   InitCells(cells, seed);
 
   for (;;) {
     DrawCells(cells);
-    usleep(100000);
+    float dt = (1.0 / FPS) * 1000000;
+    usleep((int)dt);
     CheckCells(cells);
   }
 
